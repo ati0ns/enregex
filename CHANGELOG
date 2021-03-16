@@ -1,0 +1,11 @@
+# CHANGELOG
+
+## [1.0.0]
+* Initial commit
+
+### Added
+* `package.json` file.
+* `README.md` file.
+* `src/tests.js` file.
+* `EnRegExp` class.
+* `<EnRegExp>.prototype.array` method.
