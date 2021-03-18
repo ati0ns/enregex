@@ -1,1 +1,1 @@
-module.exports = require("../dist/EnRegExp/EnRegExp.js")
+module.exports = require("../dist/Enregex/Enregex.js")
