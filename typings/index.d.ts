@@ -3,6 +3,18 @@ declare module "enregex" {
         constructor(pattern: string | RegExp | Array<*>, flags: String)
 
         /**
+         * Tells if a string or a line ends with the wanted string with the wanted options.
+         * @example
+         * console.log(Enregex.endsWith("Hello world!", "!", { flags: "i" }))
+         * // true
+         * console.log(Enregex.endsWith("Hello world?\nHello world!", "world!", { multiline: "one" }))
+         * // true
+         * console.log(Enregex.endsWith("Hello world!\nHello world...", "rld!", { multiline: "all" }))
+         * // false
+         */
+        static endsWith(string: string, endsWith: string | Array<string>, parameters?: startsOrEndsWithParameters): boolean
+
+        /**
          * Tells if a string or a line starts with the wanted string with the wanted options.
          * @example
          * console.log(Enregex.startsWith("Hello world!", "hello", { flags: "i" }))
@@ -12,7 +24,7 @@ declare module "enregex" {
          * console.log(Enregex.startsWith("Hello world!\nhello world!", "hello", { multiline: "all" }))
          * // false
          */
-        static startsWith(string: string, startsWith: string | Array<string>, parameters: startsWithParameters): boolean
+        static startsWith(string: string, startsWith: string | Array<string>, parameters?: startsWithParameters): boolean
 
         /**
          * Develops a regex to all possible matched strings into an array of strings.
@@ -31,8 +43,8 @@ declare module "enregex" {
         split(): Array<RegExp>
     }
 
-    interface startsWithParameters {
-        flags: string | Array<string>
-        multiline: "all" | "one"
+    interface startsOrEndsWithParameters {
+        flags?: string | Array<string>
+        multiline?: "all" | "one"
     }
 }

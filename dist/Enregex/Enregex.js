@@ -8,6 +8,22 @@ module.exports = class Enregex extends RegExp {
         super(pattern, flags)
     }
 
+    static endsWith(str, endsWith, params) {
+        if (typeof params != "object") params = {}
+        const { flags, multiline } = params,
+            copyFlags = []
+
+        if (flags && Array.isArray(flags)) flags = flags.join('')
+        if (flags && (!flags.split('')[0] || flags.split('').some(e => !["g", "m", "i", "y", "u", "s"].includes(e) || copyFlags.includes(e) || copyFlags.push(e) && 0))) throw new EnregexError("wrong value for parameters.flags")
+        if (multiline && !["all", "one"].includes(multiline)) throw new EnregexError("wrong value for parameters.multiline")
+
+        if (Array.isArray(endsWith)) {
+            if (!endsWith[0]) throw new EnregexError("endsWith must be not empty")
+            return endsWith.map(e => multiline == "one" ? new Enregex(`${e}$`, (flags || '') + (multiline ? "m" : '')).test(str) : !new Enregex(`(?<!${e})$`, (flags || '') + (multiline ? "m" : '')).test(str))
+        }
+        return multiline == "one" ? new Enregex(`${endsWith}$`, (flags || '') + (multiline ? "m" : '')).test(str) : !new Enregex(`(?<!${endsWith})$`, (flags || '') + (multiline ? "m" : '')).test(str)
+    }
+
     static startsWith(str, startsWith, params) {
         if (typeof params != "object") params = {}
         const { flags, multiline } = params,

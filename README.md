@@ -45,6 +45,6 @@ new Enregex(/foo(bar)?|bar?/).array()
 
 Returns an array of regex (`Array<Enregex>`) by the 'alternate' character.
 ```js
-new Enregex(/foo|bar/i)
+new Enregex(/foo|bar/i).split()
 // (2) [/foo/i, /bar/i]
 ```
