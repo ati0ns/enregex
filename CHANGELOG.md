@@ -1,51 +1,75 @@
 # CHANGELOG
 
+## [1.4.0]
+
+### Added
+
+* `<Enregex>.prototype.includes` method.
+
+## [1.3.1]
+
+### Fixed
+
+* README updated.
+* `index.d.ts` file has another form of arrays.
+
 ## [1.3.0]
 
 ### added
+
 * `<Enregex>.endsWith` method.
 
 ## [1.2.0]
 
 ### added
+
 * `<Enregex>.startsWith` method.
 
 ## [1.1.0]
 
 ### Added
+
 * `<Enregex>.prototype.split` method.
 
 ## [1.0.5]
+
 * Trying to make typescript working.
 
 ## [1.0.4]
 
 ### Changed
+
 * Typescript has another path.
 
 ## [1.0.3]
 
 ### Changed
+
 * Renamed `EnRegExp` to `Enregex`.
 
 ### Fixed
+
 * Typescript has to work. ;_;
 
 ## [1.0.2]
 
 ### Fixed
+
 * Typescript should really works now.
 
 ## [1.0.1]
 
 ### Fixed
+
 * Missing little things added.
 * Typescript may be working now.
 
 ## [1.0.0]
+
 * Initial commit
 
 ### Added
+
 * `package.json` file.
 * `README.md` file.
 * `src/tests.js` file.

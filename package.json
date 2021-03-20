@@ -1,6 +1,6 @@
 {
     "name": "enregex",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "To make regex easier, faster, stronger: so better.",
     "main": "./src/index.js",
     "types": "./typings/index.d.ts",

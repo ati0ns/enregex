@@ -11,7 +11,7 @@ module.exports = class Enregex extends RegExp {
     static endsWith(str, endsWith, params) {
         if (typeof params != "object") params = {}
         const { flags, multiline } = params,
-            copyFlags = []
+        copyFlags = []
 
         if (flags && Array.isArray(flags)) flags = flags.join('')
         if (flags && (!flags.split('')[0] || flags.split('').some(e => !["g", "m", "i", "y", "u", "s"].includes(e) || copyFlags.includes(e) || copyFlags.push(e) && 0))) throw new EnregexError("wrong value for parameters.flags")
@@ -27,7 +27,7 @@ module.exports = class Enregex extends RegExp {
     static startsWith(str, startsWith, params) {
         if (typeof params != "object") params = {}
         const { flags, multiline } = params,
-            copyFlags = []
+        copyFlags = []
 
         if (flags && Array.isArray(flags)) flags = flags.join('')
         if (flags && (!flags.split('')[0] || flags.split('').some(e => !["g", "m", "i", "y", "u", "s"].includes(e) || copyFlags.includes(e) || copyFlags.push(e) && 0))) throw new EnregexError("wrong value for parameters.flags")
@@ -55,6 +55,11 @@ module.exports = class Enregex extends RegExp {
         } while (res.includes("("))
 
         return JSON.parse('["' + res.replace(/(?<!(?<!\\)\\(?:\\\\)*)\|/g, '", "') + '"]').concat(toAdd)
+    }
+
+    includes(toFind) {
+        if (typeof toFind != "string" && !Array.isArray(toFind)) throw new EnregexError("toFind must be of type string or instance of Array")
+        return typeof toFind == "string" ? this.test(toFind) : toFind.map(e => this.test(e)).reduce((a, b) => a && b)
     }
 
     split() {
