@@ -14,4 +14,9 @@ const Enregex = require("../src/index.js")
 // console.log(new Enregex(/foobar/).includes("foobarfoobar")) // true
 // console.log(new Enregex(/foobar/).includes(["foo", "bar"])) // false
 
+// console.log(Enregex.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" }))
+// // (2) [ [ '-anchor', ' There is a' ], [ '-tag', ' rain-bow - \\-here.' ] ]
+// console.log(Enregex.beacons("-anchor: There is a: -tag rain-bow - \\:here. -a -b", { position: "end" }))
+// // (2) [ [ 'anchor:', ' There is' ], [ 'a:', ' -tag rain-bow - \\:here. -a -b' ] ]
+
 setTimeout(() => 0, 5e3)

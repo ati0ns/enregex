@@ -3,6 +3,16 @@ declare module "enregex" {
         constructor(pattern: string | RegExp | any[], flags: String)
 
         /**
+         * Finds beacons and their content into an array.
+         * @example
+         * console.log(Enregex.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" }))
+         * // (2) [ [ '-anchor', ' There is a' ], [ '-tag', ' rain-bow - \\-here.' ] ]
+         * console.log(Enregex.beacons("-anchor: There is a: -tag rain-bow - \\:here. -a -b", { position: "end" }))
+         * // (2) [ [ 'anchor:', ' There is' ], [ 'a:', ' -tag rain-bow - \\:here. -a -b' ] ]
+         */
+        static beacons(string: string, parameters?: beaconsParams, ...beacons: string[] | RegExp): string[][]
+
+        /**
          * Tells if a string or a line ends with the wanted string with the wanted options.
          * @example
          * console.log(Enregex.endsWith("Hello world!", "!", { flags: "i" }))
@@ -48,7 +58,13 @@ declare module "enregex" {
          * console.log(new Enregex(/(current)?song(info(rmation)?s?)?|chanson(actuelle)?|musique|現在の曲|genzai(-|_)?no(-|_)?kyoku|曲(情報)?|kyoku(-|_)?joho|canción((-|_)?(información|actual))?/i).split())
          * // (8) [/(current)?song(info(rmation)?s?)?/i, /chanson(actuelle)?/i, /musique/i, /現在の曲/i, /genzai(-|_)?no(-|_)?kyoku/i, /曲(情報)?/i, /kyoku(-|_)?joho/i, /canción((-|_)?(información|actual))?/i]
          */
-        split(): RegExp[]
+        split(): Enregex[]
+    }
+
+    interface beaconsParams {
+        ignore?: string | RegExp | string[] | RegExp[]
+        position: "start" | "end"
+        beaconBase?: string
     }
 
     interface startsOrEndsWithParameters {

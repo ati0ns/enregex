@@ -8,6 +8,19 @@ module.exports = class Enregex extends RegExp {
         super(pattern, flags)
     }
 
+    static beacons(str, params, ...bcns) {
+        if (typeof str != "string") throw new EnregexError("string must be of type string")
+        if (Array.isArray(bcns) && Array.isArray(bcns[0])) bcns = bcns.flat()
+        if (typeof params != "object") params = {}
+        const { ignore, position } = params
+        if (!["start", "end"].includes(position)) throw new EnregexError("params.position has wrong value")
+        const beaconBase = params.beaconBase || (position == "end" ? ":" : "-"),
+
+            match = str.match(position == "end" ? RegExp(`(\\b\\S+${beaconBase})\\s*((?:[^${beaconBase}]|(?<=\\\\|\\s)${beaconBase}${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gi") : RegExp(`(\\B${beaconBase}\\S+)\\s*((?:[^${beaconBase}]|(?<=\\\\|\\S)${beaconBase}|-(?=\\s)${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gi")),
+            res = match && match.map(m => position == "end" ? [m.slice(0, m.indexOf(beaconBase) + 1), m.slice(m.indexOf(beaconBase) + 1)] : [m.slice(0, m.indexOf(" ")), m.slice(m.indexOf(" "))])
+        return match && (Array.isArray(bcns) && bcns[0] ? res.filter(e => bcns[0] instanceof RegExp ? bcns[0].test(e[0]) : bcns.includes(e[0])) : res)
+    }
+
     static endsWith(str, endsWith, params) {
         if (typeof params != "object") params = {}
         const { flags, multiline } = params,
