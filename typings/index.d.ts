@@ -22,7 +22,7 @@ declare module "enregex" {
          * console.log(Enregex.endsWith("Hello world!\nHello world...", "rld!", { multiline: "all" }))
          * // false
          */
-        static endsWith(string: string, endsWith: string | string[], parameters?: startsOrEndsWithParameters): boolean
+        static endsWith(string: string, endsWith: string | string[], parameters?: endsWithParameters): boolean
 
         /**
          * Tells if a string or a line starts with the wanted string with the wanted options.
@@ -34,7 +34,7 @@ declare module "enregex" {
          * console.log(Enregex.startsWith("Hello world!\nhello world!", "hello", { multiline: "all" }))
          * // false
          */
-        static startsWith(string: string, startsWith: string | string[], parameters?: startsOrEndsWithParameters): boolean
+        static startsWith(string: string, startsWith: string | string[], parameters?: startsWithParameters): boolean
 
         /**
          * Develops a regex to all possible matched strings into an array of strings.
@@ -67,7 +67,9 @@ declare module "enregex" {
         beaconBase?: string
     }
 
-    interface startsOrEndsWithParameters {
+    interface endsWithParameters extends startsWithParameters { }
+
+    interface startsWithParameters {
         flags?: string | string[]
         multiline?: "all" | "one"
     }

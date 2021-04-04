@@ -13,11 +13,11 @@ module.exports = class Enregex extends RegExp {
         if (Array.isArray(bcns) && Array.isArray(bcns[0])) bcns = bcns.flat()
         if (typeof params != "object") params = {}
         const { ignore, position } = params
-        if (!["start", "end"].includes(position)) throw new EnregexError("params.position has wrong value")
+        if (!["start", "end"].includes(position)) throw new Error("params.position has wrong value")
         const beaconBase = params.beaconBase || (position == "end" ? ":" : "-"),
 
-            match = str.match(position == "end" ? RegExp(`(\\b\\S+${beaconBase})\\s*((?:[^${beaconBase}]|(?<=\\\\|\\s)${beaconBase}${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gi") : RegExp(`(\\B${beaconBase}\\S+)\\s*((?:[^${beaconBase}]|(?<=\\\\|\\S)${beaconBase}|-(?=\\s)${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gi")),
-            res = match && match.map(m => position == "end" ? [m.slice(0, m.indexOf(beaconBase) + 1), m.slice(m.indexOf(beaconBase) + 1)] : [m.slice(0, m.indexOf(" ")), m.slice(m.indexOf(" "))])
+            match = str.match(position == "end" ? RegExp(`(\\b\\S+${beaconBase})\\s*((?:[^${beaconBase}]|(?<=\\W)${beaconBase}${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gim") : RegExp(`(\\B${beaconBase}\\S+)\\s*((?:[^${beaconBase}]|(?<=\\\\|\\S)${beaconBase}|${beaconBase}(?=\\s)${Array.isArray(ignore) ? ignore[0] ? "|" + ignore.map(e => e instanceof RegExp ? e.source : e).join("|") : '' : ignore ? "|" + (ignore instanceof RegExp ? ignore.source : ignore) : ''})+)(?= +|$)`, "gim")),
+            res = match && match.map(m => position == "end" ? [m.slice(0, m.indexOf(beaconBase) + 1), m.slice(m.indexOf(" ", m.indexOf(beaconBase)) + 1)] : [m.slice(0, m.indexOf(" ")), m.slice(m.indexOf(" "))])
         return match && (Array.isArray(bcns) && bcns[0] ? res.filter(e => bcns[0] instanceof RegExp ? bcns[0].test(e[0]) : bcns.includes(e[0])) : res)
     }
 
@@ -54,20 +54,30 @@ module.exports = class Enregex extends RegExp {
     }
 
     array() {
-        let res = this.source
+        let res = this.source.replace(/\(\?:/g, "(")
         const toAdd = []
 
-        do {
-            res = res.replace(/\(([^|\n]+?)\)\??([^()\n])/g, (_, ...a) => a[0] + (a[1] ? "|" + a[0] + a[1] : ''))
-                .replace(/\(([^\n]+?)\)\??([^()|?\n][^()|\n]+)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + ")")
-                .replace(/(?:(?<!\(.+)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => Array.from({ length: a[1].split("|").length }, (_, i) => {
-                    const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
-                    if (matched && matched[0].includes("?") && !toAdd.includes(a[0])) toAdd.push(a[0])
-                    return a[0] + a[1].split("|")[i]
-                }).join("|")).replace(/(([^|()\n]+?)[^|()\n])\?/g, (_, ...a) => a[0] + "|" + a[1])
-        } while (res.includes("("))
+        while (/\?|(?<!(?<!\\)\\(?:\\\\)*)\(/.test(res)) {
+            res = res.replace(/(?<![^()|]+)\(([^|\n]+?)\)\??([^()\n]+)/g, (_, ...a) => a[0] + (a[1] ? "|" + a[0] + a[1] : '')).replace(/\(([^\n]+?)\)\??([^()|?\n][^()|\n]+)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + ")").replace(/(?:(?<!\(.*)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length || 1 }, (_, i) => {
+                const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
+                if (matched && matched[0].endsWith("?") && !toAdd.includes(a[0])) toAdd.push(a[0])
+                return a[0] + a[1].split("|")[i]
+            }).join("|") + ")").replace(/(([^|()\n]+?)[^|()\n])\?/g, (_, ...a) => a[0] + "|" + a[1]).replace(/([^|()\n]+)\(([^()\n]+)\)/g, (_, ...a) => Array.from({ length: a[1].split("|").length || 1 }, (_, i) => a[0] + a[1].split("|")[i]).join("|"))
+            res = res.replace(/\(([^()\n]+)\)([^|()\n?]+)\??/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + ")").replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => {
+                if (a[3])
+                    for (const e of a[0].split("|"))
+                        if (!/[()|?]/.test(e) && !toAdd.includes(e)) toAdd.push(e)
+                return Array.from({ length: a[2].split("|").length || 1 }, (_, j) => a[0].split("|")[i] + a[2].split("|")[j]).join("|")
+            }).join("|") + ")").replace(/\(([^()?]+)\)/g, "$1")
+            while (/\(([^()|]+)\)/.test(res)) res = res.replace(/\(([^()|]+)\)/g, "$1")
+        }
 
-        return JSON.parse('["' + res.replace(/(?<!(?<!\\)\\(?:\\\\)*)\|/g, '", "') + '"]').concat(toAdd)
+        const cache = []
+        return JSON.parse('["' + res.replace(/(?<!(?<!\\)\\(?:\\\\)*)\|/g, '", "') + '"]').concat(toAdd).filter(e => {
+            const eInCache = cache.includes(e)
+            if (!eInCache) cache.push(e)
+            return !eInCache
+        })
     }
 
     includes(toFind) {

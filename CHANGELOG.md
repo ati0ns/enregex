@@ -1,10 +1,17 @@
 # CHANGELOG
 
+## [1.5.1]
+
+### Fixed
+
+* `Enregex.beacons` has some details fixed.
+* `<Enregex>.prototype.array` works better but may have problems. Feel free to report them.
+
 ## [1.5.0]
 
 ### Added
 
-* `<Enregex>.beacons` method.
+* `Enregex.beacons` method.
 
 ## [1.4.0]
 
