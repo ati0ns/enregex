@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [1.6.0]
+
+### Added
+
+* `Enregex.build` method. (Will be upgraded later.)
+* `Util` class.
+* `Util.checkURLs` method.
+
+### Changed
+
+* `Enregex.beacons` is now `Util.beacons`.
+* `Enregex.startsWith` is now `Util.startsWith`.
+* `Enregex.endsWith` is now `Util.endsWith`.
+
 ## [1.5.1]
 
 ### Fixed

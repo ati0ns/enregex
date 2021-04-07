@@ -1,4 +1,4 @@
-const Enregex = require("../src/index.js")
+const { Enregex, Util } = require("../src/index.js")
 
 // console.log(new Enregex(/hello?/igm).array()) // (2) ['hello', 'hell']
 // console.log(new Enregex("hello?", "igm").array()) // (2) ['hello', 'hell']
@@ -14,9 +14,14 @@ const Enregex = require("../src/index.js")
 // console.log(new Enregex(/foobar/).includes("foobarfoobar")) // true
 // console.log(new Enregex(/foobar/).includes(["foo", "bar"])) // false
 
-// console.log(Enregex.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" }))
+// console.log(Util.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" }))
 // // (2) [ [ '-anchor', ' There is a' ], [ '-tag', ' rain-bow - \\-here.' ] ]
-// console.log(Enregex.beacons("-anchor: There is a: -tag rain-bow - \\:here. -a -b", { position: "end" }))
+// console.log(Util.beacons("-anchor: There is a: -tag rain-bow - \\:here. -a -b", { position: "end" }))
 // // (2) [ [ 'anchor:', ' There is' ], [ 'a:', ' -tag rain-bow - \\:here. -a -b' ] ]
+
+// console.log(Util.checkURLs({ secured: !0, str: "There is a link <https://code.visualstudio.com/api/references/theme-color#peek-view-colors>." }))
+// // (1) ['https://code.visualstudio.com/api/references/theme-color#peek-view-colors']
+
+console.log(Enregex.build("startsWith: 0 or abc or (def \\(ghi\\)); endsWith: 1 or ( smth ); src: (?:not-before(a)b or c not-after(d)) or group<abc>(abc)repeat: (<abc>, 2)", "abuuuismgadfge"))
 
 setTimeout(() => 0, 5e3)
