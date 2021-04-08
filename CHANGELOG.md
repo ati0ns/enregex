@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## [1.6.3]
+
+### Added
+* License added.
+
+### Fixed
+* `<Enregex>.prototype.array` works much better. (Will be upgraded later.)
+
+## [1.6.2]
+
+### Fixed
+
+* Correct license in `package.json`.
+
+## [1.6.1]
+
+### Added
+
+* Apache license.
+
 ## [1.6.0]
 
 ### Added

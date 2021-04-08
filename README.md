@@ -23,17 +23,17 @@ new Enregex(["hello", "world"])
 
 ## Enregex functions
 
-* \<Enregex>.prototype
+* &lt;Enregex&gt;.prototype
 
-  * [\<Enregex>.prototype.array()](https://github.com/ati0ns/enregex#enregex-proto-array)
-  * [\<Enregex>.prototype.includes()](https://github.com/ati0ns/enregex#enregex-proto-includes)
-  * [\<Enregex>.prototype.split()](https://github.com/ati0ns/enregex#enregex-proto-split)
+  * [&lt;Enregex&gt;.prototype.array()](https://github.com/ati0ns/enregex#enregex-proto-array)
+  * [&lt;Enregex&gt;.prototype.includes()](https://github.com/ati0ns/enregex#enregex-proto-includes)
+  * [&lt;Enregex&gt;.prototype.split()](https://github.com/ati0ns/enregex#enregex-proto-split)
 * [Util.beacons()](https://github.com/ati0ns/enregex#util-beacons)
 * [Util.checkURLs()](https://github.com/ati0ns/enregex#util-checkURLs)
 * [Util.endsWith()](https://github.com/ati0ns/enregex#util-endsWith)
 * [Util.startsWith()](https://github.com/ati0ns/enregex#util-startsWith)
 
-<h2 id="enregex-proto-array">Enregex.prototype.array()</h2>
+<h2 id="enregex-proto-array">&lt;Enregex&gt;.prototype.array()</h2>
 
 Returns an array of strings (`Array<string>`) which can be matched by the regex.
 
@@ -42,7 +42,7 @@ new Enregex(/foo(bar)?|bar?/).array()
 // (4) ["foo", "foobar", "ba", "bar"]
 ```
 
-<h2 id="enregex-proto-includes">Enregex.prototype.includes()</h2>
+<h2 id="enregex-proto-includes">&lt;Enregex&gt;.prototype.includes()</h2>
 
 Returns a boolean whether the given argument includes the regex or not.
 
@@ -54,7 +54,7 @@ new Enregex(/foo(bar)?|bar?/).includes(["bar", "fooba"])
 // false
 ```
 
-<h2 id="enregex-proto-split">Enregex.prototype.split()</h2>
+<h2 id="enregex-proto-split">&lt;Enregex&gt;.prototype.split()</h2>
 
 Returns an array of regex (`Array<Enregex>`) by the 'alternate' character.
 
