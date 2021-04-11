@@ -1,6 +1,47 @@
 "use strict"
 
-const EnregexError = require("../rest/EnregexError.js")
+const EnregexError = require("../rest/EnregexError.js"),
+    arrayGetterFn = rx => {
+        let res = typeof rx == "string" ? rx : rx.source.replace(/\(\?:/g, "(")
+        const toAdd = []
+
+        while (/\?|(?<!(?<!\\)\\(?:\\\\)*)\(/.test(res)) {
+            res = res.replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)([^]*)/g, (_, ...a) => {
+                    if (a[1] && !a[4]) toAdd.push(...arrayGetterFn(a[2]))
+                    if (a[3] && !a[4]) toAdd.push(...arrayGetterFn(a[0]))
+                    return a[0] + a[2] + a[4]
+                })
+                .replace(/(?<![^()|]+)\(([^()|\n]+?)\)(\??)([^()\n]+)([^]*)/g, (_, ...a) => a[0] + a[2] + a[3] + (a[1] ? "|" + a[2] + a[3] : ''))
+                .replace(/([^]*)([^()\n]+)\(([^|\n]+?)\)(\??)([^\n]+)/g, (_, ...a) => a[0] + a[1] + a[2] + a[4] + (a[3] ? "|" + a[0] + a[1] + a[4] : ''))
+                .replace(/([^|()\n]*)\(([^\n]+?)\)(\??)([^()|?\n]+)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length }, (_, i) => {
+                    if (a[2] && !toAdd.includes(a[0] + a[3])) toAdd.push(...arrayGetterFn(a[0] + a[3].split("|")[i]))
+                    if (a[4] && !toAdd.includes(a[0] + a[1].split("|")[i])) toAdd.push(...arrayGetterFn(a[0] + a[1].split("|")[i]))
+                    if (a[2] && a[4] && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0]))
+                    return a[0] + a[1].split("|")[i] + a[3]
+                }).join("|") + ")")
+                .replace(/(?:(?<!\(.*)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length || 1 }, (_, i) => {
+                    const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
+                    if (matched && matched[0].endsWith("?") && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0]))
+                    return a[0] + a[1].split("|")[i]
+                }).join("|") + ")")
+                .replace(/(([^|()\n]+?)[^|()\n])\?([^|()\n]*)/g, (_, ...a) => a[0] + a[2] + "|" + a[1] + a[2])
+                .replace(/([^|()\n]+)\(([^()\n]+)\)/g, (_, ...a) => Array.from({ length: a[1].split("|").length || 1 }, (_, i) => a[0] + a[1].split("|")[i]).join("|"))
+                .replace(/\(([^()\n]+)\)([^|()\n?]+)\??([^\n]*)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + a[2] + ")")
+                .replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => {
+                    if (a[3]) for (const e of a[0].split("|")) if (!/[()|?]/.test(e) && !toAdd.includes(e)) toAdd.push(...arrayGetterFn(e))
+                    return Array.from({ length: a[2].split("|").length || 1 }, (_, j) => a[0].split("|")[i] + a[2].split("|")[j]).join("|")
+                }).join("|") + ")")
+                .replace(/\(([^()?]+)\)/g, "$1")
+            while (/\(([^()|]+)\)/.test(res)) res = res.replace(/\(([^()|]+)\)/g, "$1")
+        }
+
+        const cache = []
+        return JSON.parse('["' + res.replace(/(?<!(?<!\\)\\(?:\\\\)*)\|/g, '", "') + '"]').concat(toAdd).filter(e => {
+            const eInCache = cache.includes(e)
+            if (!eInCache) cache.push(e)
+            return !eInCache
+        })
+    }
 
 class Enregex extends RegExp {
     constructor(pattern, flags) {
@@ -37,43 +78,8 @@ class Enregex extends RegExp {
         return new Enregex(rx.join(''), (typeof flags == "string" ? flags.split('') : flags).reduce((a, b) => a + (a.includes(b) || !"gimusy".includes(b) ? '' : b), ''))
     }
 
-    array() {
-        let res = rx.source.replace(/\(\?:/g, "(")
-        const toAdd = []
-
-        while (/\?|(?<!(?<!\\)\\(?:\\\\)*)\(/.test(res)) {
-            res = res.replace(/(?<![^()|]+)\(([^|\n]+?)\)\??([^()\n]+)/g, (_, ...a) => a[0] + (a[1] ? "|" + a[0] + a[1] : ''))
-                .replace(/([^|()\n?]*)\(([^\n]+?)\)(\??)([^()|?\n]+)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length }, (_, i) => {
-                    console.log(a[2], a[4])
-                    if (a[2] && !toAdd.includes(a[0] + a[3])) toAdd.push(a[0] + a[3])
-                    if (a[4] && !toAdd.includes(a[0] + a[1].split("|")[i])) toAdd.push(a[0] + a[1].split("|")[i].replace(/\?/g, ''))
-                    if (a[2] && a[4] && !toAdd.includes(a[0])) toAdd.push(a[0])
-                    return a[0] + a[1].split("|")[i] + a[3]
-                }).join("|") + ")")
-                .replace(/(?:(?<!\(.*)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length || 1 }, (_, i) => {
-                    const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
-                    if (matched && matched[0].endsWith("?") && !toAdd.includes(a[0])) toAdd.push(a[0])
-                    return a[0] + a[1].split("|")[i]
-                }).join("|") + ")")
-                .replace(/(([^|()\n]+?)[^|()\n])\?([^|()\n]*)/g, (_, ...a) => a[0] + a[2] + "|" + a[1] + a[2])
-                .replace(/([^|()\n]+)\(([^()\n]+)\)/g, (_, ...a) => Array.from({ length: a[1].split("|").length || 1 }, (_, i) => a[0] + a[1].split("|")[i]).join("|"))
-                .replace(/\(([^()\n]+)\)([^|()\n?]+)\??/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + ")")
-                .replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => {
-                    if (a[3])
-                        for (const e of a[0].split("|"))
-                            if (!/[()|?]/.test(e) && !toAdd.includes(e)) toAdd.push(e)
-                    return Array.from({ length: a[2].split("|").length || 1 }, (_, j) => a[0].split("|")[i] + a[2].split("|")[j]).join("|")
-                }).join("|") + ")")
-                .replace(/\(([^()?]+)\)/g, "$1")
-            while (/\(([^()|]+)\)/.test(res)) res = res.replace(/\(([^()|]+)\)/g, "$1")
-        }
-
-        const cache = []
-        return JSON.parse('["' + res.replace(/(?<!(?<!\\)\\(?:\\\\)*)\|/g, '", "') + '"]').concat(toAdd).filter(e => {
-            const eInCache = cache.includes(e)
-            if (!eInCache) cache.push(e)
-            return !eInCache
-        })
+    get array() {
+        return arrayGetterFn(this)
     }
 
     includes(toFind) {

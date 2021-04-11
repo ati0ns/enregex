@@ -25,7 +25,7 @@ new Enregex(["hello", "world"])
 
 * &lt;Enregex&gt;.prototype
 
-  * [&lt;Enregex&gt;.prototype.array()](https://github.com/ati0ns/enregex#enregex-proto-array)
+  * [&lt;Enregex&gt;.prototype.array](https://github.com/ati0ns/enregex#enregex-proto-array)
   * [&lt;Enregex&gt;.prototype.includes()](https://github.com/ati0ns/enregex#enregex-proto-includes)
   * [&lt;Enregex&gt;.prototype.split()](https://github.com/ati0ns/enregex#enregex-proto-split)
 * [Util.beacons()](https://github.com/ati0ns/enregex#util-beacons)
@@ -33,12 +33,12 @@ new Enregex(["hello", "world"])
 * [Util.endsWith()](https://github.com/ati0ns/enregex#util-endsWith)
 * [Util.startsWith()](https://github.com/ati0ns/enregex#util-startsWith)
 
-<h2 id="enregex-proto-array">&lt;Enregex&gt;.prototype.array()</h2>
+<h2 id="enregex-proto-array">&lt;Enregex&gt;.prototype.array</h2>
 
 Returns an array of strings (`Array<string>`) which can be matched by the regex.
 
 ```js
-new Enregex(/foo(bar)?|bar?/).array()
+new Enregex(/foo(bar)?|bar?/).array
 // (4) ["foo", "foobar", "ba", "bar"]
 ```
 
