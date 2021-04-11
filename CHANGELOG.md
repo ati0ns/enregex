@@ -1,20 +1,31 @@
 # CHANGELOG
 
+## [1.7.0]
+
+### Added
+
+* Linter added.
+* `Util.factorize` method.
+
 ## [1.6.5]
 
 ### Changed
+
 * `<Enregex>.prototype.array` is now a getter.
 
 ### Fixed
+
 * `<Enregex>.prototype.array` sould works perfectly.
 * Ts wasn't working on Enregex when imported as module's porperty.
 
 ## [1.6.3]
 
 ### Added
+
 * License added.
 
 ### Fixed
+
 * `<Enregex>.prototype.array` works much better. (Will be upgraded later.)
 
 ## [1.6.2]

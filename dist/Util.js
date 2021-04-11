@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 "use strict"
 
 const Enregex = require("./Enregex/Enregex.js"),
@@ -23,7 +24,7 @@ class Util {
         if (wl && wl.some(l => !/https?:\/\/(?:www\\.)?[a-z\d](?:[a-z\d-]{0,61})[a-z\d]?\.[a-z]{2,}(?:[^\s]+)?\b/.test(l))) throw new EnregexError("'whitelist' includes invalid link")
         if (bl && bl.some(l => !/https?:\/\/(?:www\\.)?[a-z\d](?:[a-z\d-]{0,61})[a-z\d]?\.[a-z]{2,}(?:[^\s]+)?\b/.test(l))) throw new EnregexError("'blacklist' includes invalid link")
 
-        const found = str.match(new Enregex(`https${secured ? '' : "?"}:\\/\\/(?:www\\.)?[a-z\d](?:[a-z\\d-]{0,61})[a-z\\d]?\\.[a-z]{2,}(?:[^\\s]+)?\\b`, "ig"))
+        const found = str.match(new Enregex(`https${secured ? '' : "?"}:\\/\\/(?:www\\.)?[a-z\\d](?:[a-z\\d-]{0,61})[a-z\\d]?\\.[a-z]{2,}(?:[^\\s]+)?\\b`, "ig"))
         if (!found) return null
 
         if (wl) return found.filter(e => wl.some(l => e.startsWith(l)))
@@ -33,10 +34,10 @@ class Util {
 
     static endsWith(str, endsWith, params) {
         if (typeof params != "object") params = {}
-        const { flags, multiline } = params,
-        copyFlags = []
+        const flags = params.flags && (Array.isArray(params.flags) ? params.flags.join('') : params.flags),
+            multiline = params.multiline || "one",
+            copyFlags = []
 
-        if (flags && Array.isArray(flags)) flags = flags.join('')
         if (flags && (!flags.split('')[0] || flags.split('').some(e => !["g", "m", "i", "y", "u", "s"].includes(e) || copyFlags.includes(e) || copyFlags.push(e) && 0))) throw new EnregexError("'parameters.flags' has wrong value")
         if (multiline && multiline != "all" && multiline != "one") throw new EnregexError("'parameters.multiline' has wrong value")
 
@@ -47,12 +48,17 @@ class Util {
         return multiline == "one" ? new Enregex(`${endsWith}$`, (flags || '') + (multiline ? "m" : '')).test(str) : !new Enregex(`(?<!${endsWith})$`, (flags || '') + (multiline ? "m" : '')).test(str)
     }
 
+    static factorize(str) {
+        return str.replace(/([a-z]+|\d+[a-z]*|\([a-z\d\s()+/*-]+?\))\s*(?:\*?\s*([a-z]+)|\*\s*(\d+[a-z]*)|\*?\s*(\([a-z\d\s()+/*-]+?\)))\s*(\+|-)\s*(?:\1\s*(?:\*?\s*([a-z]+)|\*\s*(\d+[a-z]*)|\*?\s*(\([a-z\d\s()+/*-]+?\)))|(?:([a-z]+)|(\d+[a-z]*)|(\([a-z\d\s()+/*-]+?\)))\s*\*\s*\1)|(?:([a-z]+)|\*\s*(\d+[a-z]*)|\*?\s*(\([a-z\d\s()+/*-]+?\)))\s*\*\s*([a-z]+|\d+[a-z]*|\([a-z\d\s()+/*-]+?\))\s*(\+|-)\s*(?:\15\s*(?:\*?\s*([a-z]+)|\*\s*(\d+[a-z]*)|\*?\s*(\([a-z\d\s()+/*-]+?\)))|(?:([a-z]+)|(\d+[a-z]*)|(\([a-z\d\s()+/*-]+?\)))\s*\*\s*\15)/gi, "$1$15($2$3$4$12$13$14$5$16$6$7$8$9$10$11$16$17$18$19$20$21$22)")
+            .replace(/\(([a-z\d]+)\)/gi, "$1")
+    }
+
     static startsWith(str, startsWith, params) {
         if (typeof params != "object") params = {}
-        const { flags, multiline } = params,
-        copyFlags = []
+        const flags = params.flags && (Array.isArray(params.flags) ? params.flags.join('') : params.flags),
+            multiline = params.multiline || "one",
+            copyFlags = []
 
-        if (flags && Array.isArray(flags)) flags = flags.join('')
         if (flags && (!flags.split('')[0] || flags.split('').some(e => !["g", "m", "i", "y", "u", "s"].includes(e) || copyFlags.includes(e) || copyFlags.push(e) && 0))) throw new EnregexError("'parameters.flags' has wrong value")
         if (multiline && multiline != "all" && multiline != "one") throw new EnregexError("'parameters.multiline' has wrong value")
 

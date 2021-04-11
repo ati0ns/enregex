@@ -1,11 +1,23 @@
 {
     "name": "enregex",
-    "version": "1.6.5",
+    "version": "1.7.0",
     "description": "To make regex easier, faster, stronger: so better.",
     "main": "./src/index.js",
     "types": "./typings/index.d.ts",
+    "exports": {
+        ".": [
+            {
+                "require": "./src/index.js",
+                "import": "./esm/index.mjs"
+            },
+            "./src/index.js"
+        ],
+        "./esm": "./esm/index.mjs"
+    },
     "scripts": {
-        "test": "node ./src/tests.js && exit 0"
+        "test": "npm run lint && node ./src/tests.js",
+        "lint": "eslint src",
+        "prepublishOnly": "npm run test"
     },
     "repository": {
         "type": "git",
@@ -28,5 +40,13 @@
     "bugs": {
         "url": "https://github.com/ati0ns/enregex/issues"
     },
-    "homepage": "https://github.com/ati0ns/enregex#readme"
+    "homepage": "https://github.com/ati0ns/enregex#readme",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.21.0",
+        "@typescript-eslint/parser": "^4.21.0",
+        "eslint": "^7.24.0"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
 }

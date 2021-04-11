@@ -1,6 +1,6 @@
 declare module "enregex" {
     export default class Enregex extends RegExp {
-        constructor(pattern: string | RegExp | any[], flags: String)
+        constructor(pattern: string | RegExp | *[], flags: string)
 
         /**
          * Builds a regex from more simple-to-understand format.
@@ -36,7 +36,7 @@ declare module "enregex" {
     }
 
     export class Enregex extends RegExp {
-        constructor(pattern: string | RegExp | any[], flags: String)
+        constructor(pattern: string | RegExp | *[], flags: string)
 
         /**
          * Builds a regex from more simple-to-understand format.
@@ -103,6 +103,14 @@ declare module "enregex" {
         static endsWith(string: string, endsWith: string | string[], parameters?: endsWithParameters): boolean
 
         /**
+         * Factorize some calculs in a string.
+         * @example
+         * Util.factorize("2y - z * 2 | (4-z) (x/3 *  4) - (4-z)(1 / xy)")
+         * // "2(y-z) | (4-z)((x/3 *  4)-(1 / xy))"
+         */
+        static factorize(string: string): string
+
+        /**
          * Tells if a string or a line starts with the wanted string with the wanted options.
          * @example
          * console.log(Enregex.startsWith("Hello world!", "hello", { flags: "i" }))
@@ -126,5 +134,8 @@ declare module "enregex" {
         multiline?: "all" | "one"
     }
 
-    interface startsWithParameters extends endsWithParameters { }
+    interface startsWithParameters {
+        flags?: string | string[]
+        multiline?: "all" | "one"
+    }
 }
