@@ -35,41 +35,7 @@ declare module "enregex" {
         split(): Enregex[]
     }
 
-    export class Enregex extends RegExp {
-        constructor(pattern: string | RegExp | *[], flags: string)
-
-        /**
-         * Builds a regex from more simple-to-understand format.
-         * @example
-         * console.log(Enregex.build("startsWith: 0 or abc or (def \\(ghi\\)); endsWith: 1 or ( smth ); src: (not-before(a)b or c not-after(d)) or group<abc>(abc)(repeat: <abc>, 2)", "abuuuismgadfge"))
-         * // Enregex /^(?:0|abc|def \(ghi\))((?<!a)b|c(?!d))|group<abc>(abc)(repeat: <abc>, 2)(?:1| smth )$/gimsu
-         */
-        static build(source: string, flags?: string | string[]): Enregex
-
-        /**
-         * Develops a regex to all possible matched strings into an array of strings.
-         * @example
-         * console.log(new Enregex(/hello?/igm).array()) // (2) ['hello', 'hell]
-         * console.log(new Enregex("hello?", "igm").array()) // (2) ['hello', "hell"]
-         */
-        array(): string[]
-
-        /**
-         * Returns a boolean whether the given argument includes the regex or not.
-         * @example
-         * console.log(new Enregex(/foobar/).includes("foobarfoobar")) // true
-         * console.log(new Enregex(/foobar/).includes(["foo", "bar"])) // false
-         */
-        includes(toFind: string | string[]): boolean
-
-        /**
-         * Splits a regex into an array of regex by 'alternate' characters (`|`) in the main block.
-         * @example
-         * console.log(new Enregex(/(current)?song(info(rmation)?s?)?|chanson(actuelle)?|musique|現在の曲|genzai(-|_)?no(-|_)?kyoku|曲(情報)?|kyoku(-|_)?joho|canción((-|_)?(información|actual))?/i).split())
-         * // (8) [/(current)?song(info(rmation)?s?)?/i, /chanson(actuelle)?/i, /musique/i, /現在の曲/i, /genzai(-|_)?no(-|_)?kyoku/i, /曲(情報)?/i, /kyoku(-|_)?joho/i, /canción((-|_)?(información|actual))?/i]
-         */
-        split(): Enregex[]
-    }
+    export const Enregex: Enregex
 
     export class Util {
         /**

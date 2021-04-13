@@ -16,6 +16,7 @@ new Enregex(/starts?|commencer?/i).array
 new Enregex(/ab?(c?d?e)?hgi/i).array
 new Enregex(/(af)b?(c?d?e)?h(gl)?i/i).array
 new Enregex(/(abc)(de?f)?(g?hi)/i).array
+new Enregex(/ray(?:-|_)?gifts?|gifts?(?:-|_)?ray/).array
 
 new Enregex(/(current)?song(info(rmation)?s?)?|chanson(actuelle)?|musique|現在の曲|genzai(-|_)?no(-|_)?kyoku|曲(情報)?|kyoku(-|_)?joho|canción((-|_)?(información|actual))?/i).split()
 // (8) [/(current)?song(info(rmation)?s?)?/i, /chanson(actuelle)?/i, /musique/i, /現在の曲/i, /genzai(-|_)?no(-|_)?kyoku/i, /曲(情報)?/i, /kyoku(-|_)?joho/i, /canción((-|_)?(información|actual))?/i]
@@ -39,6 +40,10 @@ Util.checkURLs({ secured: !0, str: "There is a link <https://code.visualstudio.c
 Util.factorize("2y - z * 2 | (4-z) (x/3 *  4) - (4-z)(1 / xy)")
 // "2(y-z) | (4-z)((x/3 *  4)-(1 / xy))"
 
+new Enregex(/abcdef/).merge(/a.?cdf/) // Enregex /ab?cde?f/
+new Enregex(/abcdef/).merge(/a(.cde)?cdf/, "abcdefghi") // Enregex /a(?:(?:(.cde)?|b)|b)cde?fghi/
+
 console.log(Enregex.build("startsWith: 0 or abc or (def \\(ghi\\)); endsWith: 1 or ( smth ); src: (?:not-before(a)b or c not-after(d)) or group<abc>(abc)repeat: (<abc>, 2)", "abuuuismgadfge"))
+// Enregex /^(?:0|abc|def \(ghi\))(?:(?<!a)b|c(?!d))|(abc)abc{2}(?:1| smth )$/gimsu
 
 setTimeout(() => 0, 5e3)

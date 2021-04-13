@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [1.8.0]
+
+### Added
+
+* `<Enregex>.prototype.merge` method. (Not perfect now.)
+
+### Fixed
+
+* `<Enregex>.prototype.array` (I hope) fixed.
+
 ## [1.7.0]
 
 ### Added

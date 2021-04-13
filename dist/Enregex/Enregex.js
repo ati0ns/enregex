@@ -12,27 +12,26 @@ const EnregexError = require("../rest/EnregexError.js"),
                 if (a[3] && !a[4]) toAdd.push(...arrayGetterFn(a[0]))
                 return a[0] + a[2] + a[4]
             })
-                .replace(/(?<![^()|]+)\(([^()|\n]+?)\)(\??)([^()\n]+)([^]*)/g, (_, ...a) => a[0] + a[2] + a[3] + (a[1] ? "|" + a[2] + a[3] : ''))
-                .replace(/([^]*)([^()\n]+)\(([^|\n]+?)\)(\??)([^\n]+)/g, (_, ...a) => a[0] + a[1] + a[2] + a[4] + (a[3] ? "|" + a[0] + a[1] + a[4] : ''))
-                .replace(/([^|()\n]*)\(([^\n]+?)\)(\??)([^()|?\n]+)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length }, (_, i) => {
-                    if (a[2] && !toAdd.includes(a[0] + a[3])) toAdd.push(...arrayGetterFn(a[0] + a[3].split("|")[i]))
-                    if (a[4] && !toAdd.includes(a[0] + a[1].split("|")[i])) toAdd.push(...arrayGetterFn(a[0] + a[1].split("|")[i]))
-                    if (a[2] && a[4] && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0]))
-                    return a[0] + a[1].split("|")[i] + a[3]
-                }).join("|") + ")")
-                .replace(/(?:(?<!\(.*)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length || 1 }, (_, i) => {
-                    const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
-                    if (matched && matched[0].endsWith("?") && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0]))
-                    return a[0] + a[1].split("|")[i]
-                }).join("|") + ")")
-                .replace(/(([^|()\n]+?)[^|()\n])\?([^|()\n]*)/g, (_, ...a) => a[0] + a[2] + "|" + a[1] + a[2])
-                .replace(/([^|()\n]+)\(([^()\n]+)\)/g, (_, ...a) => Array.from({ length: a[1].split("|").length || 1 }, (_, i) => a[0] + a[1].split("|")[i]).join("|"))
-                .replace(/\(([^()\n]+)\)([^|()\n?]+)\??([^\n]*)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + a[2] + ")")
-                .replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => {
-                    if (a[3]) for (const e of a[0].split("|")) if (!/[()|?]/.test(e) && !toAdd.includes(e)) toAdd.push(...arrayGetterFn(e))
-                    return Array.from({ length: a[2].split("|").length || 1 }, (_, j) => a[0].split("|")[i] + a[2].split("|")[j]).join("|")
-                }).join("|") + ")")
-                .replace(/\(([^()?]+)\)/g, "$1")
+            res = res.replace(/(?<![^()|]+)\(([^()|\n]+?)\)(\??)([^()\n]+)([^]*)/g, (_, ...a) => a[0] + a[2] + a[3] + (a[1] ? "|" + a[2] + a[3] : ''))
+            res = res.replace(/([^]*)([^()\n]+)\(([^|\n]+?)\)(\??)([^\n]+)/g, (_, ...a) => a[0] + a[1] + a[2] + a[4] + (a[3] ? "|" + a[0] + a[1] + a[4] : ''))
+            res = res.replace(/([^|()\n]*)\(([^()\n]+?)\)(\??)([^|()\n]+)/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length }, (_, i) => {
+                if (a[2] && a[3] && !toAdd.includes(a[0] + a[3])) toAdd.push(...arrayGetterFn(a[0] + a[3]))
+                if (a[2] && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0] + a[3]))
+                return a[0] + a[1].split("|")[i] + a[3]
+            }).join("|") + ")")
+            res = res.replace(/(?:(?<!\(.*)([^(|\n]*?))\(([^(\n]+?)\)\??/g, (_, ...a) => "(" + Array.from({ length: a[1].split("|").length || 1 }, (_, i) => {
+                const matched = res.match(/(?<!\(.*)([^(|\n]*?)\(([^(\n]+?)\)\??/g)
+                if (matched && matched[0].endsWith("?") && !toAdd.includes(a[0])) toAdd.push(...arrayGetterFn(a[0]))
+                return a[0] + a[1].split("|")[i]
+            }).join("|") + ")")
+            res = res.replace(/(([^|()\n]+?)[^|()\n])\?([^|()\n]*)/g, (_, ...a) => a[0] + a[2] + "|" + a[1] + a[2])
+            res = res.replace(/([^|()\n]+)\(([^()\n]+)\)/g, (_, ...a) => Array.from({ length: a[1].split("|").length || 1 }, (_, i) => a[0] + a[1].split("|")[i]).join("|"))
+            res = res.replace(/\(([^()\n]+)\)([^|()\n?]+)\??([^\n]*)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => a[0].split("|")[i] + a[1]).join("|") + a[2] + ")")
+            res = res.replace(/\(([^()\n]+)\)(\??)\(([^()\n]+)\)(\??)/g, (_, ...a) => "(" + Array.from({ length: a[0].split("|").length || 1 }, (_, i) => {
+                if (a[3]) for (const e of a[0].split("|")) if (!/[()|?]/.test(e) && !toAdd.includes(e)) toAdd.push(...arrayGetterFn(e))
+                return Array.from({ length: a[2].split("|").length || 1 }, (_, j) => a[0].split("|")[i] + a[2].split("|")[j]).join("|")
+            }).join("|") + ")")
+            res = res.replace(/\(([^()?]+)\)/g, "$1")
             while (/\(([^()|]+)\)/.test(res)) res = res.replace(/\(([^()|]+)\)/g, "$1")
         }
 
@@ -86,6 +85,71 @@ class Enregex extends RegExp {
     includes(toFind) {
         if (typeof toFind != "string" && !Array.isArray(toFind)) throw new EnregexError("'toFind' must be a string or instance of Array")
         return typeof toFind == "string" ? this.test(toFind) : toFind.map(e => this.test(e)).reduce((a, b) => a && b)
+    }
+
+    merge(...rxs) {
+        if (!Array.isArray(rxs) || !rxs.length) throw new EnregexError("'regexs' must includes at at least on regex")
+        if (Array.isArray(rxs[0])) rxs = rxs[0]
+        const lim = rxs.length
+        for (let i = 0; i < lim; i++) {
+            if (typeof rxs[i] == "string") rxs[i] = new Enregex(rxs[i])
+            if (!(rxs[i] instanceof RegExp)) throw new EnregexError("'regexs' must includes only strings and regexs")
+        }
+
+        return new Enregex(rxs.concat(this).reduce((a, b) => {
+            const srcA = (typeof a == "string" ? a : a.source).match(/(?<!(?<!\\)\\(?:\\\\)*)\([^]+\)\??|./g),
+                srcB = b.source.match(/(?<!(?<!\\)\\(?:\\\\)*)\([^]+\)\??|./g),
+                res = []
+
+            for (let i = 0; i < Math.max(srcA.length, srcB.length); i++) {
+                const currSrcA = srcA[i],
+                    currSrcB = srcB[i]
+
+                if (currSrcA == currSrcB) res.push(currSrcA)
+                else if (!currSrcB) res.push(currSrcA)
+                else if (!currSrcA) res.push(currSrcB)
+                else if (currSrcA == ".") {
+                    if (currSrcB == "." || currSrcB == "[" && srcB[i + 1] == "^" && srcB[i + 2] == "]") {
+                        res.push(".")
+                        if (currSrcB == "[" && srcB[i + 1] == "^" && srcB[i + 2] == "]") srcB.splice(i, 2)
+                    } else if (!(currSrcB == "\\" && srcB[i + 1] == "n")) res.push(currSrcB)
+                } else if (currSrcB == ".") {
+                    if (!(currSrcA == "\\" && srcA[i + 1] == "n")) res.push(currSrcA)
+                    else if (currSrcA == "." || currSrcA == "[" && srcA[i + 1] == "^" && srcA[i + 2] == "]") {
+                        res.push(".")
+                        if (currSrcA == "[" && srcA[i + 1] == "^" && srcA[i + 2] == "]") srcA.splice(i, 2)
+                    }
+                } else if (currSrcA == "[" && srcA[i + 1] == "^" && srcA[i + 2] == "]") {
+                    srcA.splice(i, 2)
+                    if (currSrcB == "[" && srcB[i + 1] == "^" && srcB[i + 2] == "]") {
+                        srcB.splice(i, 2)
+                        res.push("[^]")
+                    } else if (currSrcB == ".") res.push(".")
+                } else if (currSrcB == "[" && srcB[i + 1] == "^" && srcB[i + 2] == "]") {
+                    srcB.splice(i, 2)
+                    if (currSrcA == "[" && srcA[i + 1] == "^" && srcA[i + 2] == "]") {
+                        srcA.splice(i, 2)
+                        res.push("[^]")
+                    } else if (currSrcA == ".") res.push(".")
+                } else if (currSrcA == "?") {
+                    res.push(srcA.splice(i, 1))
+                    i--
+                } else if (currSrcB == "?") {
+                    res.push(srcB.splice(i, 1))
+                    i--
+                } else if (currSrcA == srcB[i + 1]) {
+                    res.push(currSrcB + "?")
+                    srcB.splice(i, 1)
+                    i--
+                } else if (currSrcB == srcA[i + 1]) {
+                    res.push(currSrcA + "?")
+                    srcA.splice(i, 1)
+                    i--
+                } else res.push(`(?:${currSrcA}|${currSrcB})`)
+            }
+
+            return res.join('')
+        }, /./))
     }
 
     split() {
