@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.8.1]
+
+### Changed
+
+* Stricter syntax.
+
 ## [1.8.0]
 
 ### Added

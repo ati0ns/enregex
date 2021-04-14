@@ -1,6 +1,6 @@
 {
     "name": "enregex",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "description": "To make regex easier, faster, stronger: so better.",
     "main": "./src/index.js",
     "types": "./typings/index.d.ts",
@@ -16,7 +16,7 @@
     },
     "scripts": {
         "test": "npm run lint && node ./src/tests.js",
-        "lint": "eslint src",
+        "lint": "eslint .",
         "prepublishOnly": "npm run test"
     },
     "repository": {
@@ -42,5 +42,29 @@
     },
     "engines": {
         "node": ">=14.0.0"
-    }
+    },
+    "eslintConfig": {
+        "env": {
+            "node": true,
+            "es2021": true
+        },
+        "extends": "eslint:recommended",
+        "parserOptions": {
+            "ecmaVersion": 12,
+            "sourceType": "module"
+        },
+        "rules": {
+            "camelcase": ["error", { "properties": "always", "ignoreDestructuring": true, "ignoreGlobals": true }],
+            "eol-last": "error",
+            "func-name-matching": "error",
+            "getter-return": "error",
+            "global-require": "error",
+            "no-undef": "off",
+            "quotes": "off",
+            "indent": "error",
+            "key-spacing": "error",
+            "lines-between-class-members": "error"
+        }
+    },
+    "readme": "./README.md"
 }
