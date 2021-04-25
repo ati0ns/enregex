@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [1.8.3]
+
+### Added
+
+* GitHub issue templates.
+* `CODE_OF_CONDUCT.md`.
+* `SECURITY.md`.
+
+## [1.8.2]
+
+### Fixed
+
+* Minor problems fixed but still important for the module to work so.
+
 ## [1.8.1]
 
 ### Changed

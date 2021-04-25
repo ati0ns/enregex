@@ -85,7 +85,7 @@ new Enregex(/foo|bar/i).split()
 Finds beacons and their content into an array.
 
 ```js
-console.log(Util.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" }))
+Util.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { position: "start" })
 // (2) [ [ '-anchor', ' There is a' ], [ '-tag', ' rain-bow - \\-here.' ] ]
 ```
 
@@ -95,7 +95,7 @@ console.log(Util.beacons("-anchor There is a -tag rain-bow - \\-here. -a -b", { 
 Returns URLs by given parameters.
 
 ```js
-console.log(Util.checkURLs({ secured: !0, str: "There is a link [https://code.visualstudio.com/api/references/theme-color#peek-view-colors](https://code.visualstudio.com/api/references/theme-color#peek-view-colors)." }))
+Util.checkURLs({ secured: !0, str: "There is a link [https://code.visualstudio.com/api/references/theme-color#peek-view-colors](https://code.visualstudio.com/api/references/theme-color#peek-view-colors)." })
 // (1) ['https://code.visualstudio.com/api/references/theme-color#peek-view-colors']
 ```
 

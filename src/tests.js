@@ -2,22 +2,22 @@
 /* jshint esversion: 6 */
 const { Enregex, Util } = require("../src/index.js");
 
-new Enregex(/hello?/igm).array(); // (2) ['hello', 'hell']
-new Enregex("hello?", "igm").array(); // (2) ['hello', 'hell']
+new Enregex(/hello?/igm).array; // (2) ['hello', 'hell']
+new Enregex("hello?", "igm").array; // (2) ['hello', 'hell']
 
-new Enregex(/evals?|tests?/i).array();
-new Enregex(/guilds|serveu?rs/i).array();
-new Enregex(/helps?|aides?|cmds?|commande?s?/i).array();
-new Enregex(/hunts?|chasser?/i).array();
-new Enregex(/mar(?:ry|iée?)s?|(?:se(?:-|_)?)?marier/i).array();
-new Enregex(/perm(?:ission)?s?/).array();
-new Enregex(/profile?/i).array();
-new Enregex(/regexp?/i).array();
-new Enregex(/starts?|commencer?/i).array();
-new Enregex(/ab?(c?d?e)?hgi/i).array();
-new Enregex(/(af)b?(c?d?e)?h(gl)?i/i).array();
-new Enregex(/(abc)(de?f)?(g?hi)/i).array();
-new Enregex(/ray(?:-|_)?gifts?|gifts?(?:-|_)?ray/).array();
+new Enregex(/evals?|tests?/i).array;
+new Enregex(/guilds|serveu?rs/i).array;
+new Enregex(/helps?|aides?|cmds?|commande?s?/i).array;
+new Enregex(/hunts?|chasser?/i).array;
+new Enregex(/mar(?:ry|iée?)s?|(?:se(?:-|_)?)?marier/i).array;
+new Enregex(/perm(?:ission)?s?/).array;
+new Enregex(/profile?/i).array;
+new Enregex(/regexp?/i).array;
+new Enregex(/starts?|commencer?/i).array;
+new Enregex(/ab?(c?d?e)?hgi/i).array;
+new Enregex(/(af)b?(c?d?e)?h(gl)?i/i).array;
+new Enregex(/(abc)(de?f)?(g?hi)/i).array;
+new Enregex(/ray(?:-|_)?gifts?|gifts?(?:-|_)?ray/).array;
 
 new Enregex(/(current)?song(info(rmation)?s?)?|chanson(actuelle)?|musique|現在の曲|genzai(-|_)?no(-|_)?kyoku|曲(情報)?|kyoku(-|_)?joho|canción((-|_)?(información|actual))?/i).split();
 // (8) [/(current)?song(info(rmation)?s?)?/i, /chanson(actuelle)?/i, /musique/i, /現在の曲/i, /genzai(-|_)?no(-|_)?kyoku/i, /曲(情報)?/i, /kyoku(-|_)?joho/i, /canción((-|_)?(información|actual))?/i]
