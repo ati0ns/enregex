@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.8.4]
+
+### Changed
+
+* Stricter syntax for `Enregex.build`.
+
 ## [1.8.3]
 
 ### Added
